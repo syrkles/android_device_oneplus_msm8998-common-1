@@ -4,7 +4,11 @@
     "target_path": "device/oppo/common"
   },
   {
-    "repository": "android_kernel_oneplus_msm8998",
+    "repository": "Singularity",
     "target_path": "kernel/oneplus/msm8998"
+  },
+  {
+    "repository": "proprietary_vendor_oneplus",
+    "target_path": "vendor/oneplus"
   }
 ]
