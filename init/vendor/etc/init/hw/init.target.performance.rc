@@ -69,12 +69,12 @@ on late-fs
 
 on property:sys.boot_completed=1
     # Disable boot time fs tuning
-    write /sys/block/sde/queue/read_ahead_kb 1024
-    write /sys/block/sde/queue/nr_requests 128
-    write /sys/block/sde/queue/iostats 1
-    write /sys/block/sda/queue/read_ahead_kb 1024
-    write /sys/block/sda/queue/nr_requests 128
-    write /sys/block/sda/queue/iostats 1
+    write /sys/block/sde/queue/read_ahead_kb 1536
+    write /sys/block/sde/queue/nr_requests 256
+    write /sys/block/sde/queue/iostats 0
+    write /sys/block/sda/queue/read_ahead_kb 1536
+    write /sys/block/sda/queue/nr_requests 256
+    write /sys/block/sda/queue/iostats 0
 
     # Enable UFS powersaving
     write /sys/devices/soc/1da4000.ufshc/clkscale_enable 1
@@ -87,36 +87,12 @@ on property:sys.boot_completed=1
     # online little cluster
     write /sys/devices/system/cpu/cpu0/online 1
     # configure governor settings for little cluster
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_sched_load 1
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_migration_notif 1
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay 19000
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load 90
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate 20000
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq 1248000
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy 1
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads "83 1804800:95"
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time 19000
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/max_freq_hysteresis 79000
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/ignore_hispeed_on_notif 1
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "tripndroid"
 
     # online big cluster
     write /sys/devices/system/cpu/cpu4/online 1
     # configure governor settings for big cluster
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "interactive"
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/use_sched_load 1
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/use_migration_notif 1
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay 19000
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load 90
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate 20000
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq 1574400
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy 1
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads "83 1939200:90 2016000:95"
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time 19000
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/max_freq_hysteresis 79000
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 300000
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/ignore_hispeed_on_notif 1
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "tripndroid"
 
     # Core Control
     write /sys/devices/system/cpu/cpu4/core_ctl/min_cpus 2
@@ -130,8 +106,20 @@ on property:sys.boot_completed=1
     write /sys/module/msm_thermal/core_control/enabled 1
 
     # Enable input boost configuration
-    write /sys/module/cpu_boost/parameters/input_boost_freq "0:1324800"
-    write /sys/module/cpu_boost/parameters/input_boost_ms 40
+    write /sys/module/cpu_boost/parameters/input_boost_ms 100
+    write /sys/module/cpu_boost/parameters/input_boost_freq "0:960000"
+
+    # Set Vibration to 80%
+    write /sys/class/timed_output/vibrator/vtg_level 2790
+
+    # Set I/O Scheduler tweaks
+    write /sys/block/mmcblk0/queue/scheduler deadline
+
+    # Enable Laptop Mode
+    write /proc/sys/vm/laptop_mode 1
+
+    # Disable FSync
+    write /sys/module/sync/parameters/fsync_enabled N
 
     # Enable bus-dcvs
     write /sys/class/devfreq/soc:qcom,cpubw/governor "bw_hwmon"
@@ -186,11 +174,6 @@ on property:sys.boot_completed=1
     # Disable sched boost
     write /proc/sys/kernel/sched_boost 0
 
-    # Enable Adaptive LMK
-    write /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk 1
-    write /sys/module/lowmemorykiller/parameters/minfree "18432,23040,27648,51256,150296,200640"
-    write /sys/module/lowmemorykiller/parameters/vmpressure_file_min 162500
-
     # Set up big.LITTLE scheduler configuration
     write /proc/sys/kernel/sched_migration_fixup 1
     write /proc/sys/kernel/sched_upmigrate 95
@@ -203,9 +186,6 @@ on property:sys.boot_completed=1
     write /proc/sys/kernel/sched_spill_nr_run 5
     write /proc/sys/kernel/sched_restrict_cluster_spill 1
     write /proc/sys/kernel/sched_prefer_sync_wakee_to_waker 1
-
-    # Set BFQ I/O scheduler
-    setprop sys.io.scheduler "bfq"
 
     # Is IOP even still a thing?
     start iop
