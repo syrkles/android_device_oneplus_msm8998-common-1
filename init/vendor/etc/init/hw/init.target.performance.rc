@@ -75,6 +75,10 @@ on property:sys.boot_completed=1
     write /sys/block/sda/queue/nr_requests 256
     write /sys/block/sda/queue/iostats 0
 
+    # Set moar writeback stuffs
+    write /proc/sys/vm/dirty_ratio 20
+    write /proc/sys/vm/dirty_background_ratio 10
+
     # Enable UFS powersaving
     write /sys/devices/soc/1da4000.ufshc/clkscale_enable 1
     write /sys/devices/soc/1da4000.ufshc/clkgate_enable 1
@@ -106,19 +110,15 @@ on property:sys.boot_completed=1
 
     # Enable input boost configuration
     write /sys/module/cpu_boost/parameters/input_boost_ms 200
-    write /sys/module/cpu_boost/parameters/input_boost_freq "0:960000"
-
-    # Set Vibration to 80%
-    write /sys/class/timed_output/vibrator/vtg_level 2790
 
     # Set I/O Scheduler tweaks
     write /sys/block/mmcblk0/queue/scheduler deadline
 
-    # Enable Laptop Mode
-    write /proc/sys/vm/laptop_mode 1
-
     # Disable FSync
     write /sys/module/sync/parameters/fsync_enabled N
+
+     # Set Vibration 
+    write /sys/class/timed_output/vibrator/vtg_level 3596
 
     # Enable bus-dcvs
     write /sys/class/devfreq/soc:qcom,cpubw/governor "bw_hwmon"
