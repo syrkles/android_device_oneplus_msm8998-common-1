@@ -98,7 +98,7 @@ PRODUCT_COPY_FILES += \
 
 # Device was launched with N
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.product.first_api_level=25
+    ro.product.first_api_level=27
 
 # Haters gonna hate..
 PRODUCT_CHARACTERISTICS := nosdcard
