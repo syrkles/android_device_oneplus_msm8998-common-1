@@ -26,7 +26,9 @@
 $(call inherit-product, vendor/oneplus/msm8998-common/msm8998-common-vendor.mk)
 
 # Overlays
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+DEVICE_PACKAGE_OVERLAYS += \
+    $(LOCAL_PATH)/overlay \
+    vendor/aosp/overlay/CarrierConfig
 
 # Dalvik
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -150,15 +152,6 @@ PRODUCT_COPY_FILES += \
     $(TOPDIR)frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/r_submix_audio_policy_configuration.xml \
     $(TOPDIR)frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml
 
-# ANT+
-#PRODUCT_PACKAGES += \
-#    AntHalService \
-#    com.dsi.ant.antradio_library \
-#    libantradio
-
-#PRODUCT_COPY_FILES += \
-#    external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/com.dsi.ant.antradio_library.xml
-
 # Bluetooth
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-impl \
@@ -224,8 +217,7 @@ PRODUCT_PACKAGES += \
 # Fingerprint sensor
 PRODUCT_PACKAGES += \
     android.hardware.biometrics.fingerprint@2.1-service \
-    fingerprintd \
-    OneplusPocketMode
+    fingerprintd
 
 # For android_filesystem_config.h
 PRODUCT_PACKAGES += \
@@ -308,10 +300,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.light@2.0-service.oneplus_8998
 
-# LiveDisplay native
-PRODUCT_PACKAGES += \
-    libjni_livedisplay
-
 # Media
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
@@ -386,10 +374,6 @@ PRODUCT_PACKAGES += \
     rcs_service_aidl.xml \
     rcs_service_api \
     rcs_service_api.xml
-
-# Recovery
-PRODUCT_PACKAGES += \
-    librecovery_updater_oneplus
 
 # RenderScript HAL
 PRODUCT_PACKAGES += \

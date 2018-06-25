@@ -54,10 +54,10 @@ TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
-TARGET_CPU_VARIANT := cortex-a73
+TARGET_CPU_VARIANT := kryo
 
 TARGET_2ND_ARCH := arm
-TARGET_2ND_ARCH_VARIANT := armv8-a
+TARGET_2ND_ARCH_VARIANT := armv7-a-neon
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := kryo
@@ -82,7 +82,7 @@ TARGET_KERNEL_HEADER_ARCH := arm64
 TARGET_KERNEL_SOURCE := kernel/oneplus/msm8998
 TARGET_KERNEL_CONFIG := singularity_defconfig
 TARGET_KERNEL_CLANG_COMPILE := true
-TARGET_KERNEL_CLANG_PATH := $(ANDROID_BUILD_TOP)/prebuilts/clang/host/$(HOST_OS)-x86/clang7/clang-r328903/bin
+TARGET_KERNEL_CLANG_PATH := $(ANDROID_BUILD_TOP)/prebuilts/clang/host/$(HOST_OS)-x86/clang-r328903/bin
 
 # Enable real time lockscreen charging current values
 BOARD_GLOBAL_CFLAGS += -DBATTERY_REAL_INFO
@@ -272,13 +272,8 @@ TARGET_VENDOR_PROP += $(PLATFORM_PATH)/vendor.prop
 
 # Recovery
 TARGET_RECOVERY_FSTAB := $(PLATFORM_PATH)/recovery.fstab
-#TARGET_RECOVERY_UI_LIB := librecovery_ui_msm
 BOARD_HAS_LARGE_FILESYSTEM := true
 BOARD_SUPPRESS_EMMC_WIPE := true
-
-# Releasetools
-TARGET_RECOVERY_UPDATER_LIBS := librecovery_updater_oneplus
-TARGET_RELEASETOOLS_EXTENSIONS := $(PLATFORM_PATH)
 
 # RIL
 TARGET_RIL_VARIANT := caf
