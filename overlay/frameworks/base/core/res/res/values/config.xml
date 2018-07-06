@@ -462,5 +462,8 @@
     1 = Available.
     -->
     <integer translatable="false" name="config_wifi_wakeup_available">1</integer>
+	
+	<!-- Full screen aspect ratio -->
+    <bool name="config_haveHigherAspectRatioScreen">true</bool>
 
 </resources>
