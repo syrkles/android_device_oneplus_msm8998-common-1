@@ -1,0 +1,90 @@
+on init
+
+# set default schedTune value for foreground/top-app (only affects EAS)
+	write /dev/stune/foreground/schedtune.prefer_idle 1
+	write /dev/stune/top-app/schedtune.prefer_idle 1
+	write /dev/stune/top-app/schedtune.boost 10
+
+on late-fs
+
+# boot time fs tune
+	write /sys/block/sda/queue/iostats 0
+	write /sys/block/sda/queue/iosched/slice_idle 0
+	write /sys/block/sda/queue/read_ahead_kb 1024
+	write /sys/block/sda/queue/nr_requests 256
+	write /sys/block/sde/queue/iostats 0
+	write /sys/block/sde/queue/iosched/slice_idle 0
+	write /sys/block/sde/queue/read_ahead_kb 1024
+	write /sys/block/sde/queue/nr_requests 256 
+
+on boot
+
+# update cpusets now that processors are up
+	write /dev/cpuset/top-app/cpus 0-7
+	write /dev/cpuset/foreground/cpus 0-7
+	write /dev/cpuset/foreground/boost/cpus 0-7
+	write /dev/cpuset/background/cpus 0-7
+	write /dev/cpuset/system-background/cpus 0-7
+# set default schedTune value for foreground/top-app (only affects EAS)
+        write /dev/stune/foreground/schedtune.prefer_idle 1
+        write /dev/stune/top-app/schedtune.prefer_idle 1
+        write /dev/stune/top-app/schedtune.boost 1
+
+on property:sys.post_boot.parsed=1
+
+# Will only work if using EAS
+        write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
+        write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "schedutil"
+        write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 500
+        write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 20000
+        write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/iowait_boost_enable 0
+        write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 500
+        write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 20000
+        write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/iowait_boost_enable 0
+
+# Enable input boost configuration
+    write /dev/stune/top-app/schedtune.boost 25
+        write /sys/module/cpu_boost/parameters/input_boost_freq "0:1036800"
+        write /sys/module/cpu_boost/parameters/dynamic_stune_boost 10
+        write /sys/module/cpu_boost/parameters/input_boost_ms 64
+
+# update cpusets now that boot is complete and we want better load balancing
+        write /dev/cpuset/top-app/cpus 0-7
+        write /dev/cpuset/foreground/boost/cpus 0-3,6-7
+        write /dev/cpuset/foreground/cpus 0-3,6-7
+        write /dev/cpuset/background/cpus 0-1
+        write /dev/cpuset/system-background/cpus 0-3
+
+    # I/O On Boot
+    write /sys/block/dm-0/queue/read_ahead_kb 1536
+    write /sys/block/dm-1/queue/read_ahead_kb 1536
+    write /sys/block/sda/queue/read_ahead_kb 1536
+    write /sys/block/sde/queue/read_ahead_kb 1536
+    write /sys/block/sda/queue/iostats 0
+    write /sys/block/sda/queue/nr_requests 256
+    write /sys/block/sde/queue/iostats 0
+    write /sys/block/sde/queue/nr_requests 256
+
+    # Set moar writeback stuffs
+    write /proc/sys/vm/dirty_ratio 20
+    write /proc/sys/vm/dirty_background_ratio 10
+
+    # Treat storage as non-rotational
+    write /sys/block/sda/queue/rotational 0
+
+    # Set deadline I/O scheduler
+    setprop sys.io.scheduler "deadline"
+
+    # Set Vibration 
+    write /sys/class/timed_output/vibrator/vtg_level 2900
+
+    #Turn off printk
+    write /sys/kernel/printk_mode 0
+
+    # Turn off debugging for certain modules
+    write /sys/module/kernel/parameters/initcall_debug 0
+    write /sys/module/lowmemorykiller/parameters/debug_level 0
+    write /sys/module/alarm/parameters/debug_mask 0
+    write /sys/module/alarm_dev/parameters/debug_mask 0
+    write /sys/module/binder/parameters/debug_mask 0
+    write /sys/module/xt_qtaguid/parameters/debug_mask 0
