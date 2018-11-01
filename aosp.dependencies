@@ -1,7 +1,7 @@
 [
   {
-    "repository" : "packages_resources_OppoGestures",
-    "target_path": "packages/resources/OppoGestures",
+    "repository" : "packages_resources_OneplusGestures",
+    "target_path": "packages/resources/OneplusGestures",
     "remote"     : "pixel"
   }
 ]

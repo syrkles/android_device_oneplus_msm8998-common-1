@@ -423,10 +423,14 @@
 
     <!-- The list absolute paths of jar/apk files containing the device specific handlers,
         delimited by File.pathSeparator, which defaults to ":" on Android  -->
-    <string name="config_alternativedeviceKeyHandlerLib" translatable="false">/system/priv-app/DeviceParts/DeviceParts.apk</string>
-    <!-- Full qualified name of the class that implements
+    <string name="config_deviceKeyHandlerLib" translatable="false">/system/priv-app/DeviceParts/DeviceParts.apk</string>
+    <string name="config_alternativeDeviceKeyHandlerLib" translatable="false">/system/priv-app/DeviceParts/DeviceParts.apk</string>
+
+     <!-- Full qualified name of the class that implements
         com.android.internal.os.DeviceKeyHandler interface. -->
-    <string name="config_alternativedeviceKeyHandlerClass" translatable="false">org.omnirom.device.KeyHandler</string>
+    <string name="config_deviceKeyHandlerClass" translatable="false">org.omnirom.device.KeyHandler</string>
+        com.android.internal.os.AlternativeDeviceKeyHandler interface. -->
+    <string name="config_alternativeDeviceKeyHandlerClass" translatable="false">org.omnirom.device.KeyHandler</string>
 
     <!-- Whether device has screen with higher aspect ratio -->
     <bool name="config_haveHigherAspectRatioScreen">true</bool>
